@@ -87,7 +87,7 @@ export default function TaskList() {
   }
 
   return (
-    <div className="relative flex h-[500px] w-full flex-col overflow-hidden p-6">
+  <div className="relative flex w-full flex-col p-6">
       <AnimatedList>
         {tasks.map((task) => (
           <Element
@@ -102,5 +102,5 @@ export default function TaskList() {
       </AnimatedList>
       <div className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t" />
     </div>
-  );
+);
 }

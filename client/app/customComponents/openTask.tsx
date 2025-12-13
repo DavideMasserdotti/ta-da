@@ -7,26 +7,34 @@ import {Input} from "@heroui/input";
 import ExpirationDatePicker from "./expirationDatePicker";
 import MapComponent from "./mapWrapper";
 import type { CalendarDate } from "@internationalized/date";
+import { useState } from "react";
 import {RadioGroup, Radio} from "@heroui/radio";
 
 
-interface FormData {
-name: string;
-description: string;
-priority: number;
-date: CalendarDate | null;
-lat: number | null;
-lon: number | null;
-}
+
+type Task = {
+  id: number;
+  name: string;
+  description?: string;
+  priority: number;
+  expirationDate: string;
+  checked: boolean;
+  lat?: number | null;
+  lon?: number | null;
+};
+
+// Tipo props
+type OpenTaskProps = {
+  task: Task;
+  isDisable: boolean;
+};
 
 
-interface Props {
-formData: FormData;
-onFormChange: (data: FormData) => void;
-}
 
 
-export function NewTask({ formData, onFormChange }: Props) {
+
+
+export function OpenTask({ task, isDisable }: OpenTaskProps) {
 return (
 <form>
 <div className="grid gap-4">
@@ -38,8 +46,8 @@ return (
 id="name"
 type="text"
 placeholder="Inserisci un nome"
-value={formData.name}
-onChange={(e) => onFormChange({ ...formData, name: e.target.value })}
+value={task.name}
+isDisabled={isDisable}
 />
 </div>
 
@@ -47,30 +55,25 @@ onChange={(e) => onFormChange({ ...formData, name: e.target.value })}
 <div className="space-y-1">
   <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Descrizione
-        </label>
+    </label>
 <Input
 id="description"
 type="text"
 placeholder="Inserisci una descrizione"
-value={formData.description}
-onChange={(e) =>
-onFormChange({ ...formData, description: e.target.value })
-}
+value={task.description}
+isDisabled={isDisable}
 />
 </div>
+
 <div className="space-y-1">
 <RadioGroup  
   label="Livello di priorità *"
   color="primary"
   orientation="horizontal"
-  value={formData.priority.toString()}
+  value={task.priority.toString()}
   onChange={(e) => {
     const value = (e.target as HTMLInputElement).value;
     console.log(e.target.value);
-    onFormChange({ 
-      ...formData, 
-      priority: parseInt(value) 
-    });
   }}
 >
   <Radio value="1">Alta</Radio>
@@ -79,25 +82,15 @@ onFormChange({ ...formData, description: e.target.value })
 </RadioGroup>
 </div>
 
+
 <div className="grid gap-2">
   <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Data di scadenza *
         </label>
-<ExpirationDatePicker
-date={formData.date}
-onDateChange={(newDate) =>
-onFormChange({ ...formData, date: newDate } as FormData)
-}
-/>
 </div>
 
 
 <div className="max-h-64 overflow-hidden rounded-lg border">
-<MapComponent
-onSelect={(la, lo) =>
-onFormChange({ ...formData, lat: la, lon: lo } as FormData)
-}
-/>
 </div>
 </div>
 </form>

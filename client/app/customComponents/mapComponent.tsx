@@ -32,8 +32,8 @@ function ClickHandler({ onSelect, position, setPosition }: {
   return null;
 }
 
-export default function MapComponent({ onSelect }: Props) {
-  const [position, setPosition] = useState<LatLngExpression | null>(null);
+export default function MapComponent({ onSelect }: Props, pos: LatLngExpression | null) {
+  const [position, setPosition] = useState<LatLngExpression | null>(pos);
   const center: [number, number] = [45.53602809263448, 10.218210455495866];
 
   return (

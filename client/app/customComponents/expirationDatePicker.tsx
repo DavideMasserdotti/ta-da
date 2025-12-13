@@ -13,7 +13,6 @@ export default function ExpirationDatePicker({ date, onDateChange }: Props) {
   return (
     <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
       <DatePicker
-        label="Data di scadenza"
         isRequired
         className="max-w-[284px]"
         value={date ?? undefined}

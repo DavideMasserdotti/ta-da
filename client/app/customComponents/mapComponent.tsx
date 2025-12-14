@@ -8,6 +8,7 @@ import L from "leaflet";
 
 type Props = {
   onSelect: (lat: number, lon: number) => void;
+  pos?: LatLngExpression | null;
 };
 
 const pinIcon = new L.Icon({
@@ -32,8 +33,8 @@ function ClickHandler({ onSelect, position, setPosition }: {
   return null;
 }
 
-export default function MapComponent({ onSelect }: Props, pos: LatLngExpression | null) {
-  const [position, setPosition] = useState<LatLngExpression | null>(pos);
+export default function MapComponent({ onSelect, pos}: Props) {
+  const [position, setPosition] = useState<LatLngExpression | null>(pos ?? null);
   const center: [number, number] = [45.53602809263448, 10.218210455495866];
 
   return (

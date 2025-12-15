@@ -12,7 +12,7 @@ import { RadioGroup, Radio } from "@heroui/radio";
 
 
 
-type Task = {
+interface Task {
   id: number;
   name: string;
   description?: string;
@@ -24,7 +24,7 @@ type Task = {
 };
 
 // Tipo props
-type OpenTaskProps = {
+interface OpenTaskProps {
   task: Task;
   isDisable: boolean;
 };

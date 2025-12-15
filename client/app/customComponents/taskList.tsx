@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { AnimatedList } from "@/components/ui/animated-list";
 import { 
@@ -13,7 +13,6 @@ import {
   useDisclosure 
 } from "@heroui/react";
 import { OpenTask } from "./openTask";
-import { number } from "framer-motion";
 
 type Task = {
   id: number;
@@ -58,7 +57,6 @@ const Element = ({
       lon: lon
     });
 
-     const [isSubmitting, setIsSubmitting] = useState(false);
      const [isDisable, setIsDisable] = useState<boolean>(true);
    
   
@@ -88,6 +86,9 @@ const Element = ({
                   <p className="text-sm font-normal dark:text-white/60">
                     {description}
                   </p>
+                </div>
+                <div className="absolute right-4 top-4 text-sm text-gray-500">
+                  {checked ? "✅ Completato" : "🕒 In corso"}
                 </div>
               </div>
             </figure>

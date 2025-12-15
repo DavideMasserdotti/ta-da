@@ -2,23 +2,19 @@
 
 
 import { Input } from "@heroui/input";
-
-
 import ExpirationDatePicker from "./expirationDatePicker";
 import MapComponent from "./mapWrapper";
-import type { CalendarDate } from "@internationalized/date";
 import { RadioGroup, Radio } from "@heroui/radio";
-
+import { CalendarDate } from "@internationalized/date";
 
 interface FormData {
   name: string;
-  description: string;
+  description?: string | "";
   priority: number;
   date: CalendarDate | null;
   lat: number | null;
   lon: number | null;
 }
-
 
 interface Props {
   formData: FormData;
@@ -27,6 +23,7 @@ interface Props {
 
 
 export function NewTask({ formData, onFormChange }: Props) {
+
   return (
     <form>
       <div className="grid gap-4">
@@ -84,6 +81,7 @@ export function NewTask({ formData, onFormChange }: Props) {
             Data di scadenza *
           </label>
           <ExpirationDatePicker
+            isDisable={false}
             date={formData.date}
             onDateChange={(newDate) =>
               onFormChange({ ...formData, date: newDate } as FormData)
@@ -94,6 +92,7 @@ export function NewTask({ formData, onFormChange }: Props) {
 
         <div className="max-h-64 overflow-hidden rounded-lg border">
           <MapComponent
+            editMode={true}
             onSelect={(la, lo) =>
               onFormChange({ ...formData, lat: la, lon: lo } as FormData)
             }

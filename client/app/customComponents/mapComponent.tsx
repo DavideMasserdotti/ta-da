@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-import { Icon, LatLngExpression } from "leaflet";
+import { LatLngExpression } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
 type Props = {
   onSelect: (lat: number, lon: number) => void;
+  editMode: boolean;
   pos?: LatLngExpression | null;
 };
 
@@ -18,22 +19,30 @@ const pinIcon = new L.Icon({
   popupAnchor: [0, -32],
 });
 
-function ClickHandler({ onSelect, position, setPosition }: {
+function ClickHandler({
+  onSelect,
+  editMode,
+  setPosition,
+}: {
   onSelect: Props["onSelect"];
-  position: LatLngExpression | null;
+  editMode: boolean;
   setPosition: React.Dispatch<React.SetStateAction<LatLngExpression | null>>;
 }) {
   useMapEvents({
     click(e) {
+      if (!editMode) return;
+
       const newPos: LatLngExpression = [e.latlng.lat, e.latlng.lng];
       setPosition(newPos);
       onSelect(e.latlng.lat, e.latlng.lng);
     },
   });
+
   return null;
 }
 
-export default function MapComponent({ onSelect, pos}: Props) {
+
+export default function MapComponent({ onSelect, editMode, pos}: Props) {
   const [position, setPosition] = useState<LatLngExpression | null>(pos ?? null);
   const center: [number, number] = [45.53602809263448, 10.218210455495866];
 
@@ -59,7 +68,7 @@ export default function MapComponent({ onSelect, pos}: Props) {
         
         <ClickHandler 
           onSelect={onSelect}
-          position={position}
+          editMode={editMode}
           setPosition={setPosition}
         />
       </MapContainer>

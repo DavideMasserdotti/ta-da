@@ -11,7 +11,7 @@ import { Checkbox } from "@heroui/checkbox";
 interface Task {
     id: number;
     name: string;
-    description?: string;
+    description?: string | "";
     priority: number;
     expirationDate: string;
     creationDate: string;

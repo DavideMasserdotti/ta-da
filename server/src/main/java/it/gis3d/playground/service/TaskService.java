@@ -10,10 +10,10 @@ import it.gis3d.playground.repository.TaskRepository;
 
 @Service
 public class TaskService {
-    @Autowired 
-     
+    @Autowired
+
     private TaskRepository repo;
-    
+
     public Task createTask(Task task) {
         if (task.getPriority() < 1 || task.getPriority() > 3) {
             throw new IllegalArgumentException("Priority deve essere 1-3");
@@ -31,33 +31,34 @@ public class TaskService {
 
     public Task updateTask(Long id, Task taskDetails) {
         Task task = repo.findById(id)
-            .orElseThrow(() -> new RuntimeException("Task non trovato"));
-        
+                .orElseThrow(() -> new RuntimeException("Task non trovato"));
+
+        // VALIDAZIONE PRIMA del set
+        if (taskDetails.getPriority() < 1 || taskDetails.getPriority() > 3) {
+            throw new IllegalArgumentException("Priority deve essere 1-3");
+        }
+
         task.setName(taskDetails.getName());
         task.setDescription(taskDetails.getDescription());
-        task.setPriority(taskDetails.getPriority());
+        task.setPriority(taskDetails.getPriority()); // ora sicuro
         task.setExpirationDate(taskDetails.getExpirationDate());
         task.setChecked(taskDetails.isChecked());
         task.setLat(taskDetails.getLat());
         task.setLon(taskDetails.getLon());
-        
-        if (task.getPriority() < 1 || task.getPriority() > 3) {
-            throw new IllegalArgumentException("Priority deve essere 1-3");
-        }
-        
+
         return repo.save(task);
     }
-    
+
     public Task toggleTask(Long id) {
         Task task = repo.findById(id)
-            .orElseThrow(() -> new RuntimeException("Task non trovato"));
+                .orElseThrow(() -> new RuntimeException("Task non trovato"));
         task.setChecked(!task.isChecked());
         return repo.save(task);
     }
-    
+
     public void deleteTask(Long id) {
         Task task = repo.findById(id)
-            .orElseThrow(() -> new RuntimeException("Task non trovato"));
+                .orElseThrow(() -> new RuntimeException("Task non trovato"));
         repo.delete(task);
     }
 }

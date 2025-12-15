@@ -11,11 +11,11 @@ import {
   useDisclosure 
 } from "@heroui/react";
 import { NewTask } from "./newTask";
-import { CalendarDate } from "@internationalized/date";
+import { CalendarDate, today, getLocalTimeZone } from "@internationalized/date";
 
 interface FormData {
   name: string;
-  description: string;
+  description?: string | "";
   priority: number;
   date: CalendarDate | null;
   lat: number | null;
@@ -32,7 +32,7 @@ export default function PopElement({ onTaskCreated }: Props) {
     name: "",
     description: "",
     priority: 3,
-    date: null,
+    date: today(getLocalTimeZone()),
     lat: null,
     lon: null
   });

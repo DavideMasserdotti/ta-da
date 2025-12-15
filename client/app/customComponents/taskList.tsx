@@ -14,13 +14,31 @@ import {
   Checkbox
 } from "@heroui/react";
 import { OpenTask } from "./openTask";
+import { CalendarDate, parseDate } from "@internationalized/date";
+
+function fromItToIso(d: string): string {
+  const [day, month, year] = d.split("/"); // "18","12","2025"
+  return `${year}-${month}-${day}`;        // "2025-12-18"
+}
 
 type Task = {
   id: number;
   name: string;
-  description?: string;
+  description?: string | "";
   priority: number;
   expirationDate: string;
+  creationDate: string;
+  checked: boolean;
+  lat?: number | null;
+  lon?: number | null;
+};
+
+type BodyTask = {
+  id: number;
+  name: string;
+  description?: string | "";
+  priority: number;
+  expirationDate: CalendarDate | null;
   creationDate: string;
   checked: boolean;
   lat?: number | null;
@@ -40,7 +58,7 @@ const Element = ({
 }: {
   id: number;
   name: string;
-  description?: string;
+  description?: string | "";
   priority: number;
   expirationDate: string;
   creationDate: string;
@@ -55,7 +73,9 @@ const Element = ({
     name: name,
     description: description,
     priority: priority,
-    expirationDate: expirationDate,
+   expirationDate: expirationDate
+  ? parseDate(fromItToIso(expirationDate))
+  : null,
     creationDate: creationDate,
     checked: checked,
     lat: lat,
@@ -84,6 +104,58 @@ const Element = ({
       console.error('Errore toggle:', error);
     }
   };
+
+
+  const updateTask = async (task: BodyTask) => {
+  const body: Task = {
+    id: task.id,
+    name: task.name,
+    description: task.description ?? "",
+    priority: task.priority,
+    expirationDate: task.expirationDate 
+      ? (task.expirationDate as CalendarDate).toString()  
+      : "",
+    creationDate: formatDateToISO(task.creationDate),
+    checked: task.checked,
+    lat: task.lat ?? null,
+    lon: task.lon ?? null,
+  };
+
+  try {
+    const response = await fetch(`http://localhost:8080/tasks/${task.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Modifica fallita: ${errorText}`);
+    }
+  
+    const updatedTask = await response.json();
+      console.log('Task toggled:', updatedTask);
+
+  } catch (error) {
+    console.error('Errore modifica:', error);
+    throw error; 
+  }
+};
+
+function formatDateToISO(dateStr: string): string {
+  const [datePart, timePart] = dateStr.split(", ");
+  const [day, month, year] = datePart.split("/");
+  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${timePart}:00`;
+}
+
+
+  const [currentTask, setCurrentTask] = useState<BodyTask>(task);
+
+const handleTaskUpdate = (updatedTask: BodyTask) => {
+  setCurrentTask(updatedTask);
+  console.log("Task aggiornato:", updatedTask);
+};
+
 
 
 
@@ -163,24 +235,41 @@ const Element = ({
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                 {name}
               </h2>
-              <Button size="sm" onPress={() => setIsDisable(false)}>
-                Modifica
+              {isDisable ? (
+                 <Button size="sm" onPress={() => setIsDisable(false)}>
+                Abilita modifica
               </Button>
+              ):(
+                <></>
+              )}
+             
             </ModalHeader>
 
             <ModalBody className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-4 sm:space-y-6">
-              <OpenTask task={task} isDisable={isDisable} />
+              <OpenTask task={currentTask} isDisable={isDisable} onTaskChange={handleTaskUpdate} />
             </ModalBody>
 
             <ModalFooter className="flex-shrink-0 p-5 sm:p-7 bg-gray-50/50 dark:bg-zinc-800/50 border-t border-gray-100 dark:border-zinc-700 gap-2 sm:gap-3">
               <Button
                 variant="light"
-                color="danger"
-                className="flex-1 sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-xl"
-                onPress={onClose}
+                className="flex-1 bg-red-500 hover:bg-red-700  sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-xl"
+                onPress={() => {onClose(); setIsDisable(true)}}
               >
                 Esci
               </Button>
+              {!isDisable ? ( <Button
+                variant="light"
+                className="flex-1 bg-yellow-500 hover:bg-yellow-700  sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-xl"
+                onPress={() => {onClose(); updateTask(task);setIsDisable(true)}}
+              >
+                Salva modifiche
+              </Button>)
+              :
+              (
+                <></>
+              )}
+              
+              
             </ModalFooter>
           </>
         )}

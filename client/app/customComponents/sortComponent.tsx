@@ -6,7 +6,7 @@ import { useState } from "react";
 interface Task {
     id: number;
     name: string;
-    description?: string;
+    description?: string | "";
     priority: number;
     expirationDate: string;
     creationDate: string;

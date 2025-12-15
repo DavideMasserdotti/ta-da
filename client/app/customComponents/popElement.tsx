@@ -11,7 +11,7 @@ import {
   useDisclosure 
 } from "@heroui/react";
 import { NewTask } from "./newTask";
-import type { CalendarDate } from "@internationalized/date";
+import { CalendarDate } from "@internationalized/date";
 
 interface FormData {
   name: string;
@@ -52,6 +52,7 @@ export default function PopElement({ onTaskCreated }: Props) {
         description: formData.description || "",
         priority: formData.priority,
         expirationDate: formData.date.toString(),
+        creationDate: new Date().toISOString(),
         checked: false,
         lat: formData.lat,
         lon: formData.lon
@@ -83,9 +84,9 @@ export default function PopElement({ onTaskCreated }: Props) {
     <>
       <Button 
         onPress={onOpen}
-        className="bg-gray-600 hover:bg-blue-700 text-white font-medium px-3 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+        className="bg-green-500 hover:bg-green-700 text-white font-medium px-3 py-2.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
       >
-        ➕ Aggiungi task
+        ➕
       </Button>
       
       <Modal 

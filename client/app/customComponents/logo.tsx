@@ -7,7 +7,7 @@ export default function Logo() {
   return (
     <h1 className="text-5xl leading-none font-semibold tracking-tighter text-balance sm:text-6xl md:text-7xl lg:text-8xl">
       Ta - 
-      <LineShadowText className="italic text-green-500" shadowColor={shadowColor}>
+      <LineShadowText className="italic text-blue-500" shadowColor={shadowColor}>
         Da
       </LineShadowText>
     </h1>

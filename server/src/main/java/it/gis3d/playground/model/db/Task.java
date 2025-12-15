@@ -1,6 +1,7 @@
 package it.gis3d.playground.model.db;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,22 +17,28 @@ public class Task {
     private String description;
     private int priority;
     private LocalDate expirationDate;
+    private LocalDateTime creationDate;
     private boolean checked;
     private Double lat;
     private Double lon;
 
-    public Task(String name, String description, int priority, LocalDate expirationDate, boolean checked, Double lat,
+    public Task(String name, String description, int priority, LocalDate expirationDate, LocalDateTime creationDate, boolean checked, Double lat,
             Double lon) {
         this.name = name;
         this.description = description;
         this.priority = priority;
         this.expirationDate = expirationDate;
+        this.creationDate = creationDate;
         this.checked = checked;
         this.lat = lat;
         this.lon = lon;
     }
 
-    public Task() {
+    public LocalDateTime getCreationDate() {
+		return creationDate;
+	}
+
+	public Task() {
     }
     
     public Long getId() {

@@ -11,10 +11,11 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
-  Checkbox
 } from "@heroui/react";
 import { OpenTask } from "./openTask";
 import { CalendarDate, parseDate } from "@internationalized/date";
+
+
 
 function fromItToIso(d: string): string {
   const [day, month, year] = d.split("/"); // "18","12","2025"
@@ -84,6 +85,8 @@ const Element = ({
     lon: lon
   });
 
+
+
   const [isDisable, setIsDisable] = useState<boolean>(true);
 
 
@@ -138,9 +141,11 @@ const Element = ({
       const updatedTask = await response.json();
       console.log('Task toggled:', updatedTask);
       onReload(true);
+      alert("✅ Task modificata con successo!");
 
     } catch (error) {
       console.error('Errore modifica:', error);
+      alert("Errore");
       throw error;
     }
   };
@@ -164,135 +169,137 @@ const Element = ({
 
 
   return (
-    <>
-      <figure
-        className={cn(
-          "relative w-full cursor-pointer overflow-hidden rounded-xl bg-white shadow-sm hover:shadow-md",
-          "transition-all duration-200 ease-in-out hover:scale-[1.01]"
-        )}
-        onClick={onOpen}
-      >
-        <div className="flex flex-col gap-2 p-3 sm:p-4">
+    <div>
+      <>
+        <figure
+          className={cn(
+            "relative w-full cursor-pointer overflow-hidden rounded-xl bg-white shadow-sm hover:shadow-md",
+            "transition-all duration-200 ease-in-out hover:scale-[1.01]"
+          )}
+          onClick={onOpen}
+        >
+          <div className="flex flex-col gap-2 p-3 sm:p-4">
 
-          <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gray-100 flex items-center justify-center">
-              <span className="text-base sm:text-lg">
-                {priority === 1 ? "🔴" : priority === 2 ? "🟡" : "🟢"}
-              </span>
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gray-100 flex items-center justify-center">
+                <span className="text-base sm:text-lg">
+                  {priority === 1 ? "🔴" : priority === 2 ? "🟡" : "🟢"}
+                </span>
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-sm sm:text-base line-clamp-1 dark:text-white">
+                  {name}
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-700 dark:text-white/70 line-clamp-2">
+                  {checked ? "✅ Completato" : "🕒 In corso"}
+                </p>
+              </div>
             </div>
 
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-sm sm:text-base line-clamp-1 dark:text-white">
-                {name}
-              </h3>
-              <p className="text-xs sm:text-sm text-gray-700 dark:text-white/70 line-clamp-2">
-                {checked ? "✅ Completato" : "🕒 In corso"}
-              </p>
-            </div>
-          </div>
+
+            <p className="text-xs sm:text-sm text-gray-700 dark:text-white/70 line-clamp-2">
+              {description}
+            </p>
 
 
-          <p className="text-xs sm:text-sm text-gray-700 dark:text-white/70 line-clamp-2">
-            {description}
-          </p>
-
-
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-gray-100">
-            <div className="flex items-center">
-              {
-                task.checked ? (
-                  <Button
-                    variant="light"
-                    className="flex-1 bg-yellow-500 hover:bg-yellow-700  sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-xl"
-                    onPress={() => toggleTask(task.id)}
-                  >
-                    Ripristina
-                  </Button>
-                ) :
-                  (
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-gray-100">
+              <div className="flex items-center">
+                {
+                  task.checked ? (
                     <Button
                       variant="light"
-                      className="flex-1 bg-green-500 hover:bg-green-700  sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-xl"
+                      className="flex-1 bg-yellow-500 hover:bg-yellow-700  sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-xl"
                       onPress={() => toggleTask(task.id)}
                     >
-                      Archivia
+                      Ripristina
                     </Button>
-                  )
-              }
-            </div>
+                  ) :
+                    (
+                      <Button
+                        variant="light"
+                        className="flex-1 bg-green-500 hover:bg-green-700  sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-xl"
+                        onPress={() => toggleTask(task.id)}
+                      >
+                        Archivia
+                      </Button>
+                    )
+                }
+              </div>
 
-            <div className="text-right text-[10px] sm:text-xs text-gray-500 space-y-0.5">
-              <div>Scadenza: {expirationDate}</div>
-              <div>Creato: {creationDate}</div>
+              <div className="text-right text-[10px] sm:text-xs text-gray-500 space-y-0.5">
+                <div>Scadenza: {expirationDate}</div>
+                <div>Creato: {creationDate}</div>
+              </div>
             </div>
           </div>
-        </div>
-      </figure>
+        </figure>
 
-      <Modal
-        backdrop="blur"
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        size="lg"
-        classNames={{
-          backdrop: "bg-black/60 backdrop-blur-sm",
-          base: cn(
-            "bg-white dark:bg-zinc-900 text-foreground",
-            "w-[95vw] max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-4xl",
-            "max-h-[90vh] sm:max-h-[85vh]",
-            "mx-2 sm:mx-4",
-            "flex flex-col rounded-3xl shadow-2xl"
-          ),
-        }}
-      >
-        <ModalContent className="flex-1 flex flex-col overflow-hidden p-0">
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex-shrink-0 p-5 sm:p-7 border-b border-gray-100 dark:border-zinc-800">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                  {name}
-                </h2>
-                {isDisable ? (
-                  <Button size="sm" onPress={() => setIsDisable(false)}>
-                    Abilita modifica
-                  </Button>
-                ) : (
-                  <></>
-                )}
-
-              </ModalHeader>
-
-              <ModalBody className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-4 sm:space-y-6">
-                <OpenTask task={currentTask} isDisable={isDisable} onTaskChange={handleTaskUpdate} />
-              </ModalBody>
-
-              <ModalFooter className="flex-shrink-0 p-5 sm:p-7 bg-gray-50/50 dark:bg-zinc-800/50 border-t border-gray-100 dark:border-zinc-700 gap-2 sm:gap-3">
-                <Button
-                  variant="light"
-                  className="flex-1 bg-red-500 hover:bg-red-700  sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-xl"
-                  onPress={() => { onClose(); setIsDisable(true) }}
-                >
-                  Esci
-                </Button>
-                {!isDisable ? (<Button
-                  variant="light"
-                  className="flex-1 bg-yellow-500 hover:bg-yellow-700  sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-xl"
-                  onPress={() => { onClose(); updateTask(currentTask); setIsDisable(true) }}
-                >
-                  Salva modifiche
-                </Button>)
-                  :
-                  (
+        <Modal
+          backdrop="blur"
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          size="lg"
+          classNames={{
+            backdrop: "bg-black/60 backdrop-blur-sm",
+            base: cn(
+              "bg-white dark:bg-zinc-900 text-foreground",
+              "w-[95vw] max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-4xl",
+              "max-h-[90vh] sm:max-h-[85vh]",
+              "mx-2 sm:mx-4",
+              "flex flex-col rounded-3xl shadow-2xl"
+            ),
+          }}
+        >
+          <ModalContent className="flex-1 flex flex-col overflow-hidden p-0">
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex-shrink-0 p-5 sm:p-7 border-b border-gray-100 dark:border-zinc-800">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+                    {name}
+                  </h2>
+                  {isDisable ? (
+                    <Button size="sm" onPress={() => setIsDisable(false)}>
+                      Abilita modifica
+                    </Button>
+                  ) : (
                     <></>
                   )}
 
+                </ModalHeader>
 
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
+                <ModalBody className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-4 sm:space-y-6">
+                  <OpenTask task={currentTask} isDisable={isDisable} onTaskChange={handleTaskUpdate} />
+                </ModalBody>
+
+                <ModalFooter className="flex-shrink-0 p-5 sm:p-7 bg-gray-50/50 dark:bg-zinc-800/50 border-t border-gray-100 dark:border-zinc-700 gap-2 sm:gap-3">
+                  <Button
+                    variant="light"
+                    className="flex-1 bg-red-500 hover:bg-red-700  sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-xl"
+                    onPress={() => { onClose(); setIsDisable(true) }}
+                  >
+                    Esci
+                  </Button>
+                  {!isDisable ? (<Button
+                    variant="light"
+                    className="flex-1 bg-yellow-500 hover:bg-yellow-700  sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-xl"
+                    onPress={() => { onClose(); updateTask(currentTask); setIsDisable(true) }}
+                  >
+                    Salva modifiche
+                  </Button>)
+                    :
+                    (
+                      <></>
+                    )}
+
+
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+      </>
+    </div>
   );
 }
 

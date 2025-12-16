@@ -3,11 +3,10 @@
 import TaskList from "./taskList";
 import Logo from "./logo";
 import PopElement from "./popElement";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "./searchBar";
 import SortComponent from "./sortComponent";
 import { Checkbox } from "@heroui/checkbox";
-
 interface Task {
     id: number;
     name: string;
@@ -104,7 +103,8 @@ export default function HomePage() {
     }, []);
 
     return (
-        <div className="flex h-screen w-full flex-col bg-gray-50 bg-gray-300">
+   
+         <div className="flex h-screen w-full flex-col bg-gray-50 bg-gray-300">
             <div className="px-2 pt-2 sm:px-3 lg:px-4">
                 <div className="flex items-center justify-between py-2">
 
@@ -140,5 +140,7 @@ export default function HomePage() {
                 <SearchBar onChange={handleSearch} />
             </div>
         </div>
+      
+       
     );
 }

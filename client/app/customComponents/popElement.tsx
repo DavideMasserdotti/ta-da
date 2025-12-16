@@ -40,7 +40,8 @@ export default function PopElement({ onTaskCreated }: Props) {
 
   const handleSubmit = useCallback(async () => {
     if (!formData.name || !formData.date || !formData.lat || !formData.lon) {
-      alert("⚠️ Compila tutti i campi inclusa la posizione sulla mappa!");
+      console.log("Sono dentro")
+      alert("⚠️ Compila tutti i campi obbligatori inclusa la posizione sulla mappa!");
       return;
     }
 
@@ -65,7 +66,8 @@ export default function PopElement({ onTaskCreated }: Props) {
       });
 
       if (response.ok) {
-        console.log("✅ Task creata con successo!");
+        console.log("Task creata con successo!");
+        alert("✅ Task creata con successo!");
         onTaskCreated();
         onOpenChange();
         setFormData({ name: "", description: "", priority: 3, date: null, lat: null, lon: null });
@@ -136,7 +138,6 @@ export default function PopElement({ onTaskCreated }: Props) {
                   className="flex-1 sm:w-auto px-8 py-3 text-sm sm:text-base font-semibold shadow-lg rounded-xl"
                   onPress={handleSubmit}
                   isLoading={isSubmitting}
-                  disabled={!formData.name || !formData.date || !formData.lat || !formData.lon}
                 >
                   Crea Task
                 </Button>

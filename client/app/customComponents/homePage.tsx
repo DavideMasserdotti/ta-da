@@ -28,11 +28,18 @@ export default function HomePage() {
     const [showArchived, setShowArchived] = useState(false);
 
 
+
     const onFilter = (filteredTasks: Task[]) => {
         setDisplayTasks(filteredTasks);
     }
 
 
+
+    const handleReload = (shouldReload: boolean) => {
+        if (shouldReload) {
+            fetchTasks(showArchived);        
+        }
+    };
 
     const handleSort = (sortedTasks: Task[]) => {
         setTasks(sortedTasks);
@@ -42,16 +49,21 @@ export default function HomePage() {
         setDisplayTasks(intersection);
     };
 
-    const handleCheckboxChange = (checked: boolean) => {
-        setShowArchived(checked);
-        //console.log("Show archived:", checked);
-        if (checked) {
+
+
+
+    const handleArchive = (tasks: Task[], toggle: boolean) => {
+         setShowArchived(toggle);
+        console.log(tasks)
+        if (toggle) {
             const activeTasks = tasks.filter(task => task.checked);
             setDisplayTasks(activeTasks);
         } else {
-            setDisplayTasks(tasks);
+            const activeTasks = tasks.filter(task => !task.checked);
+            setDisplayTasks(activeTasks);
         }
     };
+
 
 
 
@@ -69,7 +81,7 @@ export default function HomePage() {
         onFilter(filtered);
     };
 
-    const fetchTasks = async () => {
+    const fetchTasks = async (toggle: boolean) => {
         try {
             const res = await fetch(`http://localhost:8080/tasks`, {
                 cache: "no-store",
@@ -77,7 +89,7 @@ export default function HomePage() {
             if (!res.ok) throw new Error("Failed to fetch tasks");
             const data = await res.json();
             setTasks(data);
-            setDisplayTasks(data);
+            handleArchive(data, toggle);
             console.log(data);
         } catch (e) {
             console.error(e);
@@ -88,7 +100,7 @@ export default function HomePage() {
 
     useEffect(() => {
 
-        fetchTasks();
+        fetchTasks(false);
     }, []);
 
     return (
@@ -101,12 +113,17 @@ export default function HomePage() {
                     </div>
 
                     <div className="flex-1 flex justify-center">
-                        <PopElement onTaskCreated={() => fetchTasks()} />
+                        <PopElement onTaskCreated={() => fetchTasks(false)} />
                     </div>
 
 
                     <div className="flex-1 flex justify-end">
-                        <Checkbox isSelected={showArchived} onValueChange={handleCheckboxChange}>Archiviati</Checkbox>
+                        <Checkbox
+                            isSelected={showArchived}
+                            onValueChange={(checked) => handleArchive(tasks, checked)}
+                        >
+                            Archiviati
+                        </Checkbox>
                     </div>
                 </div>
             </div>
@@ -117,7 +134,7 @@ export default function HomePage() {
             </div>
 
             <div className="flex-1 overflow-y-auto px-4 pb-4 sm:px-6 lg:px-8">
-                <TaskList loading={loading} tasks={displayTasks} />
+                <TaskList loading={loading} tasks={displayTasks} onReload={handleReload} />
             </div>
             <div className="">
                 <SearchBar onChange={handleSearch} />

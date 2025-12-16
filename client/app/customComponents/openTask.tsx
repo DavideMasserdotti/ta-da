@@ -85,9 +85,6 @@ export function OpenTask({ task, isDisable, onTaskChange }: OpenTaskProps) {
 
         {/* Data scadenza */}
         <div className="space-y-1">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Data di scadenza *
-          </label>
           <ExpirationDatePicker
             isDisable={isDisable}
             date={task.expirationDate}

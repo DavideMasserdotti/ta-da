@@ -77,9 +77,6 @@ export function NewTask({ formData, onFormChange }: Props) {
         </div>
 
         <div className="grid gap-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Data di scadenza *
-          </label>
           <ExpirationDatePicker
             isDisable={false}
             date={formData.date}

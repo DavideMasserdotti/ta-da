@@ -14,6 +14,7 @@ export default function ExpirationDatePicker({ isDisable, date, onDateChange }: 
   return (
     <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
       <DatePicker
+        label="Data di scadenza"
         isDisabled={isDisable}
         isRequired
         className="max-w-[284px]"

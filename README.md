@@ -23,4 +23,4 @@ Per la parte visuale dell’applicazione sono state utilizzate:
 - Associazione di ogni task a una posizione geografica (latitudine/longitudine).  
 - Visualizzazione e gestione dei task tramite interfaccia web reattiva.
 - Possibilità di ricercare tra i task filtrando sul nome.
-- Possibilità di ordinare la lista di task per diverse caratteristiche.
+- Possibilità di ordinare la lista di task per recente, priorità, scadenza, nome.

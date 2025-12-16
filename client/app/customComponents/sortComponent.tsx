@@ -20,7 +20,7 @@ export default function SortComponent({
     onSortChange,
 }: {
     tasks: Task[];
-    onSortChange: (sortedTasks: Task[]) => void;
+    onSortChange: (sortedTasks: Task[], value: string) => void;
 }) {
     const [selectedSort, setSelectedSort] = useState<string>("age");
 
@@ -28,7 +28,7 @@ export default function SortComponent({
         setSelectedSort(value);
 
         if (!value) {
-            onSortChange(tasks);
+            onSortChange(tasks, value);
             return;
         }
 
@@ -52,7 +52,7 @@ export default function SortComponent({
             }
         });
 
-        onSortChange(sorted);
+        onSortChange(sorted, value);
     };
 
     return (

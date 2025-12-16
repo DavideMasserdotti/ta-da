@@ -25,7 +25,11 @@ export default function HomePage() {
     const [loading, setLoading] = useState(true);
     const [displayTasks, setDisplayTasks] = useState<Task[]>([]);
     const [showArchived, setShowArchived] = useState(false);
+    const [activeTasks, setActiveTasks] = useState<Task[]>([]);
+    const [sortType, setSortType] = useState("age");
 
+
+        
 
 
     const onFilter = (filteredTasks: Task[]) => {
@@ -40,7 +44,12 @@ export default function HomePage() {
         }
     };
 
-    const handleSort = (sortedTasks: Task[]) => {
+
+  
+
+
+    const handleSort = (sortedTasks: Task[], type: string) => {
+        setSortType(type);
         setTasks(sortedTasks);
         const intersection = sortedTasks.filter(task1 =>
             displayTasks.some(task2 => task1.id === task2.id)
@@ -50,16 +59,17 @@ export default function HomePage() {
 
 
 
-
     const handleArchive = (tasks: Task[], toggle: boolean) => {
          setShowArchived(toggle);
         console.log(tasks)
         if (toggle) {
             const activeTasks = tasks.filter(task => task.checked);
             setDisplayTasks(activeTasks);
+            setActiveTasks(activeTasks);
         } else {
             const activeTasks = tasks.filter(task => !task.checked);
             setDisplayTasks(activeTasks);
+            setActiveTasks(activeTasks);
         }
     };
 
@@ -70,10 +80,10 @@ export default function HomePage() {
 
     const handleSearch = (term: string) => {
         if (term === "") {
-            setDisplayTasks(tasks);
+            setDisplayTasks(activeTasks)
             return;
         }
-        const filtered = tasks.filter(task =>
+        const filtered = activeTasks.filter(task =>
             task.name.toLowerCase().includes(term.toLowerCase())
         );
 
@@ -87,8 +97,27 @@ export default function HomePage() {
             });
             if (!res.ok) throw new Error("Failed to fetch tasks");
             const data = await res.json();
-            setTasks(data);
-            handleArchive(data, toggle);
+
+            const sorted = [...data].sort((a, b) => {
+            switch (sortType) {
+                case "age":
+                    return a.id - b.id;
+                case "priority":
+                    return b.priority - a.priority;
+                case "date":
+                    return (
+                        new Date(b.expirationDate).getTime() -
+                        new Date(a.expirationDate).getTime()
+                    );
+                case "name":
+                    return b.name.localeCompare(a.name);
+                default:
+                    return 0;
+            }
+        });
+
+            setTasks(sorted);
+            handleArchive(sorted, toggle);
             console.log(data);
         } catch (e) {
             console.error(e);

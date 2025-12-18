@@ -3,11 +3,12 @@ import {
     NavbarContent,
     Input,
 } from "@heroui/react";
+import { useState } from "react";
 
 
 
 
-export default function SearchBar({ onChange }: { onChange: (term: string) => void }) {
+export default function SearchBar({searchText, onChange }: {searchText: string; onChange: (term: string) => void }) {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value);
@@ -25,6 +26,7 @@ export default function SearchBar({ onChange }: { onChange: (term: string) => vo
                             "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
                     }}
                     placeholder="Cerca task..."
+                    value={searchText}
                     size="sm"
                     startContent={<p>🔍</p>}
                     type="search"

@@ -127,7 +127,7 @@ export default function PopElement({ onTaskCreated }: Props) {
                 <Button
                   variant="light"
                   color="danger"
-                  className="flex-1 sm:w-auto px-8 py-3 text-sm sm:text-base font-medium rounded-xl"
+                  className="flex-1 bg-gray-300 hover:bg-gray-500 sm:w-auto px-8 py-3 text-sm sm:text-base font-medium rounded-xl"
                   onPress={onClose}
                   disabled={isSubmitting}
                 >
@@ -135,7 +135,7 @@ export default function PopElement({ onTaskCreated }: Props) {
                 </Button>
                 <Button
                   color="primary"
-                  className="flex-1 sm:w-auto px-8 py-3 text-sm sm:text-base font-semibold shadow-lg rounded-xl"
+                  className="flex-1 bg-green-500 hover:bg-green-700 sm:w-auto px-8 py-3 text-sm sm:text-base font-semibold shadow-lg rounded-xl"
                   onPress={handleSubmit}
                   isLoading={isSubmitting}
                 >

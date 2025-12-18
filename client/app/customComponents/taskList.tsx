@@ -110,6 +110,32 @@ const Element = ({
     }
   };
 
+  const deleteTask = async (id: number) => {
+    if (confirm("Sei sicuro di voler eliminare questo task?")) {
+      try {
+        const response = await fetch(`http://localhost:8080/tasks/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Errore nell'eliminazione del task");
+        }
+
+        console.log("Task eliminato con successo");
+        onReload(true);
+      } catch (error) {
+        console.error("Errore:", error);
+      }
+    }
+  };
+
+
+  
+
+
 
   const updateTask = async (task: BodyTask) => {
     const body: Task = {
@@ -163,6 +189,8 @@ const Element = ({
     setCurrentTask(updatedTask);
     console.log("Task aggiornato:", updatedTask);
   };
+
+  
 
 
 
@@ -275,7 +303,7 @@ const Element = ({
                 <ModalFooter className="flex-shrink-0 p-5 sm:p-7 bg-gray-50/50 dark:bg-zinc-800/50 border-t border-gray-100 dark:border-zinc-700 gap-2 sm:gap-3">
                   <Button
                     variant="light"
-                    className="flex-1 bg-red-500 hover:bg-red-700  sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-xl"
+                    className="flex-1 bg-gray-300 hover:bg-gray-500  sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-xl"
                     onPress={() => { onClose(); setIsDisable(true) }}
                   >
                     Esci
@@ -291,7 +319,13 @@ const Element = ({
                     (
                       <></>
                     )}
-
+                  <Button
+                    variant="light"
+                    className="flex-1 bg-red-500 hover:bg-red-700 sm:w-auto px-6 sm:px-8 py-2 sm:py-3 text-xs sm:text-sm font-medium rounded-xl"
+                    onPress={() => { onClose(); deleteTask(currentTask.id) }}
+                  >
+                    Elimina
+                  </Button>
 
                 </ModalFooter>
               </>
